@@ -2,12 +2,15 @@ package main
 
 import (
 	cli_app "code/internal/drivers/cli-app"
+	"code/internal/drivers/diff-checker"
 	"context"
 	"os"
 )
 
 func main() {
 	cliApp := cli_app.NewCliApp()
+
+	cliApp.AddAction(diff_checker.Handler)
 
 	if err := cliApp.Init(); err != nil {
 		panic(err)

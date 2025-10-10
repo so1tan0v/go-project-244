@@ -1,15 +1,19 @@
 package cli_app
 
 import (
+	"code/internal/interfaces"
 	"context"
 
 	"github.com/urfave/cli/v3"
 )
 
 type CliApp struct {
-	Cli   cli.Command
-	Flags []cli.Flag
+	Cli    cli.Command
+	Flags  []cli.Flag
+	Action func(context.Context, *cli.Command) error
 }
+
+var _ interfaces.Cli = (*CliApp)(nil)
 
 func NewCliApp() *CliApp {
 	return &CliApp{}
@@ -23,8 +27,9 @@ func (c *CliApp) Init() error {
 	c.Cli = cli.Command{
 		Name: "gendiff",
 		//Version: "0.0.1",
-		Usage: "Compares two configuration files and shows a difference.",
-		Flags: c.Flags,
+		Usage:  "Compares two configuration files and shows a difference.",
+		Flags:  c.Flags,
+		Action: c.Action,
 	}
 
 	return nil
@@ -41,6 +46,10 @@ func (c *CliApp) GenerateFlags() error {
 	}
 
 	return nil
+}
+
+func (c *CliApp) AddAction(f func(ctx context.Context, command *cli.Command) error) {
+	c.Action = f
 }
 
 func (c *CliApp) Run(ctx context.Context, args []string) error {
