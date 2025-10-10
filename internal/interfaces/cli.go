@@ -6,7 +6,6 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-// Cli - Интерфейс приложения
 type Cli interface {
 	Init() error
 	Run(ctx context.Context, args []string) error

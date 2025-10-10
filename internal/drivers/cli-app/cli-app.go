@@ -38,10 +38,10 @@ func (c *CliApp) Init() error {
 func (c *CliApp) GenerateFlags() error {
 	c.Flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:        "format",
-			Aliases:     []string{"f"},
-			Usage:       "output format",
-			DefaultText: "stylish",
+			Name:    "format",
+			Aliases: []string{"f"},
+			Usage:   "output format",
+			Value:   "stylish",
 		},
 	}
 

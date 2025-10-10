@@ -1,3 +1,5 @@
+gendiff
+.DS_Store
+.vscode/
 go.sum
 .idea
-.DS_STORE
