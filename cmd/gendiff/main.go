@@ -14,7 +14,10 @@ func main() {
 	cliApp.AddAction(handler.Handler)
 
 	if err := cliApp.Init(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		_, err := fmt.Fprintln(os.Stderr, err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 
@@ -22,7 +25,10 @@ func main() {
 	args := os.Args
 
 	if err := cliApp.Run(ctx, args); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		_, err := fmt.Fprintln(os.Stderr, err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 }
