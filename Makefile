@@ -10,7 +10,7 @@ run-go:
 	go run $(APP_PATH)
 
 test:
-	go test
+	go test ./...
 
 run-example:
 	make build && ./gendiff examples/file1.json examples/file2.json
