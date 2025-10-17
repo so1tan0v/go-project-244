@@ -14,9 +14,9 @@ func (f Formatter) Name() string { return "stylish" }
 func (f Formatter) Format(nodes []diff.DiffNode) (string, error) {
 	var sb strings.Builder
 
-	sb.WriteString("{\n")
+	fmt.Fprintf(&sb, "{\n")
 	f.writeNodes(&sb, nodes, 1)
-	sb.WriteString("\n}")
+	fmt.Fprintf(&sb, "\n}")
 
 	return sb.String(), nil
 }
@@ -33,22 +33,49 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, depth 
 	for i, n := range sorted {
 		switch n.Type {
 		case diff.NodeNested:
-			sb.WriteString(fmt.Sprintf("%s  %s: {\n", indent, n.Key))
+			_, err := fmt.Fprintf(sb, "%s  %s: {\n", indent, n.Key)
+			if err != nil {
+				return
+			}
+
 			f.writeNodes(sb, n.Children, depth+2)
-			sb.WriteString("\n" + indent + "  }")
+
+			_, err = fmt.Fprintf(sb, "\n"+indent+"  }")
+			if err != nil {
+				return
+			}
 		case diff.NodeUnchanged:
-			sb.WriteString(fmt.Sprintf("%s  %s: %s", indent, n.Key, f.stringify(n.OldValue, depth)))
+			_, err := fmt.Fprintf(sb, "%s  %s: %s", indent, n.Key, f.stringify(n.OldValue, depth))
+			if err != nil {
+				return
+			}
 		case diff.NodeRemoved:
-			sb.WriteString(fmt.Sprintf("%s- %s: %s", indent, n.Key, f.stringify(n.OldValue, depth)))
+			_, err := fmt.Fprintf(sb, "%s- %s: %s", indent, n.Key, f.stringify(n.OldValue, depth))
+			if err != nil {
+				return
+			}
 		case diff.NodeAdded:
-			sb.WriteString(fmt.Sprintf("%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth)))
+			_, err := fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth))
+			if err != nil {
+				return
+			}
 		case diff.NodeUpdated:
-			sb.WriteString(fmt.Sprintf("%s- %s: %s\n", indent, n.Key, f.stringify(n.OldValue, depth)))
-			sb.WriteString(fmt.Sprintf("%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth)))
+			_, err := fmt.Fprintf(sb, "%s- %s: %s\n", indent, n.Key, f.stringify(n.OldValue, depth))
+			if err != nil {
+				return
+			}
+
+			_, err = fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth))
+			if err != nil {
+				return
+			}
 		}
 
 		if i < len(sorted)-1 {
-			sb.WriteString("\n")
+			_, err := fmt.Fprintf(sb, "\n")
+			if err != nil {
+				return
+			}
 		}
 	}
 }
@@ -57,7 +84,10 @@ func (f Formatter) stringify(v any, depth int) string {
 	switch m := v.(type) {
 	case map[string]any:
 		var sb strings.Builder
-		sb.WriteString("{\n")
+		_, err := fmt.Fprintf(&sb, "{\n")
+		if err != nil {
+			return ""
+		}
 
 		keys := make([]string, 0, len(m))
 		for k := range m {
@@ -69,13 +99,22 @@ func (f Formatter) stringify(v any, depth int) string {
 			val := m[k]
 			indent := strings.Repeat(" ", (depth+2)*2)
 
-			sb.WriteString(fmt.Sprintf("%s%s: %s", indent, k, f.stringify(val, depth+2)))
+			_, err := fmt.Fprintf(&sb, "%s%s: %s", indent, k, f.stringify(val, depth+2))
+			if err != nil {
+				return ""
+			}
 
 			if i < len(keys)-1 {
-				sb.WriteString("\n")
+				_, err2 := fmt.Fprintf(&sb, "\n")
+				if err2 != nil {
+					return ""
+				}
 			}
 		}
-		sb.WriteString("\n" + strings.Repeat(" ", (depth+1)*2) + "}")
+		_, err = fmt.Fprintf(&sb, "\n"+strings.Repeat(" ", (depth+1)*2)+"}")
+		if err != nil {
+			return ""
+		}
 
 		return sb.String()
 	case string:

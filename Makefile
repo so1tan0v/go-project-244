@@ -14,3 +14,6 @@ test:
 
 run-example:
 	make build && ./gendiff examples/file1.json examples/file2.json
+
+lint:
+	 golangci-lint run
