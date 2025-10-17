@@ -15,5 +15,12 @@ run-simple-example:
 run-complex-example:
 	make build && ./gendiff examples/complex/file1.json examples/complex/file2.json
 
+run-plain-simple-example:
+	make build && ./gendiff -f plain examples/simple/file1.json examples/simple/file2.json
+
+run-plain-complex-example:
+	make build && ./gendiff -f plain examples/complex/file1.json examples/complex/file2.json
+
+
 lint:
 	 golangci-lint run

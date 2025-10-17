@@ -2,6 +2,8 @@ package diff
 
 import (
 	"code/internal/drivers/jsonparser"
+	"code/internal/drivers/plainformatter"
+	"code/internal/drivers/stylishformatter"
 	"code/internal/drivers/yamlparser"
 	"code/internal/interfaces"
 	"context"
@@ -10,7 +12,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"code/internal/drivers/stylishformatter"
 	usecase "code/internal/usecase/diff"
 
 	"github.com/urfave/cli/v3"
@@ -56,13 +57,15 @@ func Handler(_ context.Context, command *cli.Command) error {
 		format = "stylish"
 	}
 
+	var formatter interfaces.Formatter
 	switch format {
 	case "stylish":
+		formatter = stylishformatter.Formatter{}
+	case "plain":
+		formatter = plainformatter.Formatter{}
 	default:
 		return fmt.Errorf("unsupported format: %s", format)
 	}
-
-	var formatter stylishformatter.Formatter
 
 	svc := usecase.NewService(parser, formatter)
 	out, err := svc.GenerateDiff(leftRaw, rightRaw)
