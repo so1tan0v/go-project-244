@@ -10,6 +10,8 @@ jobs:
     name: SonarQube
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -18,7 +20,6 @@ jobs:
       - name: Testing
         run: make coverage
 
-      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
