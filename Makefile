@@ -12,6 +12,9 @@ run-go:
 test:
 	go test ./...
 
+coverage:
+	go test -coverprofile=coverage.out ./...
+
 run-example:
 	make build && ./gendiff examples/file1.json examples/file2.json
 
