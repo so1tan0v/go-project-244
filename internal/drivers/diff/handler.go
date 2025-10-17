@@ -9,7 +9,7 @@ import (
 
 	"code/internal/drivers/jsonparser"
 	"code/internal/drivers/stylishformatter"
-	usecase "code/internal/usecase/gendiff"
+	usecase "code/internal/usecase/diff"
 
 	"github.com/urfave/cli/v3"
 )
