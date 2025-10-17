@@ -32,7 +32,7 @@ func TestHandler_Success(t *testing.T) {
 	cliApp := initCliApp()
 
 	examplePathDir := getExamplePath()
-	args := []string{"", path.Join(examplePathDir, "file1.json"), path.Join(examplePathDir, "file2.json")}
+	args := []string{"", path.Join(examplePathDir, "simple", "file1.json"), path.Join(examplePathDir, "file2.json")}
 	err := cliApp.Run(context.Background(), args)
 	if err != nil {
 		t.Fatal(err)

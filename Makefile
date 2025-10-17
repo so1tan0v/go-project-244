@@ -3,20 +3,17 @@ APP_PATH ="./cmd/gendiff/main.go"
 build:
 	go build -o gendiff $(APP_PATH)
 
-run:
-	./gendiff $(ARGS)
-
-run-go:
-	go run $(APP_PATH)
-
 test:
 	go test ./...
 
 coverage:
 	go test -coverprofile=coverage.out ./...
 
-run-example:
-	make build && ./gendiff examples/file1.json examples/file2.json
+run-simple-example:
+	make build && ./gendiff examples/simple/file1.json examples/simple/file2.json
+
+run-complex-example:
+	make build && ./gendiff examples/complex/file1.json examples/complex/file2.json
 
 lint:
 	 golangci-lint run
