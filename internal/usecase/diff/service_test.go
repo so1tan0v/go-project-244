@@ -1,15 +1,16 @@
 package diff
 
 import (
-	"code/internal/drivers/jsonparser"
-	"code/internal/drivers/stylishformatter"
+	"code/internal/drivers/formmaters/stylish"
+	"code/internal/drivers/parsers/jsonparser"
+
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewService(t *testing.T) {
-	formatter := stylishformatter.Formatter{}
+	formatter := stylish.Formatter{}
 	parser := jsonparser.Parser{}
 
 	sn := NewService(parser, formatter)
@@ -19,7 +20,7 @@ func TestNewService(t *testing.T) {
 }
 
 func TestService_GenerateDiff_Success(t *testing.T) {
-	formatter := stylishformatter.Formatter{}
+	formatter := stylish.Formatter{}
 	parser := jsonparser.Parser{}
 
 	sn := NewService(parser, formatter)
@@ -37,7 +38,7 @@ func TestService_GenerateDiff_Success(t *testing.T) {
 }
 
 func TestService_GenerateDiff_ParseError1(t *testing.T) {
-	formatter := stylishformatter.Formatter{}
+	formatter := stylish.Formatter{}
 	parser := jsonparser.Parser{}
 
 	sn := NewService(parser, formatter)
@@ -53,7 +54,7 @@ func TestService_GenerateDiff_ParseError1(t *testing.T) {
 }
 
 func TestService_GenerateDiff_ParseError2(t *testing.T) {
-	formatter := stylishformatter.Formatter{}
+	formatter := stylish.Formatter{}
 	parser := jsonparser.Parser{}
 
 	sn := NewService(parser, formatter)

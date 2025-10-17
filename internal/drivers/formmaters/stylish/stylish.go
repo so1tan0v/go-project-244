@@ -1,4 +1,4 @@
-package stylishformatter
+package stylish
 
 import (
 	"code/internal/domain/diff"
@@ -14,9 +14,17 @@ func (f Formatter) Name() string { return "stylish" }
 func (f Formatter) Format(nodes []diff.DiffNode) (string, error) {
 	var sb strings.Builder
 
-	fmt.Fprintf(&sb, "{\n")
+	_, err := fmt.Fprintf(&sb, "{\n")
+	if err != nil {
+		return "", err
+	}
+
 	f.writeNodes(&sb, nodes, 1)
-	fmt.Fprintf(&sb, "\n}")
+
+	_, err = fmt.Fprintf(&sb, "\n}")
+	if err != nil {
+		return "", err
+	}
 
 	return sb.String(), nil
 }

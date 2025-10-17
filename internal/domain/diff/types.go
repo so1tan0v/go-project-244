@@ -11,9 +11,9 @@ const (
 )
 
 type DiffNode struct {
-	Key      string
-	Type     NodeType
-	OldValue any
-	NewValue any
-	Children []DiffNode
+	Key      string     `json:"key"`
+	Type     NodeType   `json:"-"`
+	OldValue any        `json:"oldValue"`
+	NewValue any        `json:"newValue"`
+	Children []DiffNode `json:"children"`
 }

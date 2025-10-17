@@ -1,4 +1,4 @@
-package stylishformatter
+package stylish
 
 import (
 	"testing"

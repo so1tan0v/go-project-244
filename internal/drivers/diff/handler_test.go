@@ -1,7 +1,7 @@
 package diff
 
 import (
-	cli_app "code/internal/drivers/cli-app"
+	cliapp "code/internal/drivers/cli-app"
 	"context"
 	"fmt"
 	"os"
@@ -11,13 +11,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func initCliApp() *cli_app.CliApp {
-	cliApp := cli_app.NewCliApp()
+func initCliApp() *cliapp.CliApp {
+	cliApp := cliapp.NewCliApp()
 
 	cliApp.AddAction(Handler)
 
 	if err := cliApp.Init(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		_, err2 := fmt.Fprintln(os.Stderr, err)
+		if err2 != nil {
+			return nil
+		}
+
 		os.Exit(1)
 	}
 
@@ -32,7 +36,7 @@ func TestHandler_Success(t *testing.T) {
 	cliApp := initCliApp()
 
 	examplePathDir := getExamplePath()
-	args := []string{"", path.Join(examplePathDir, "simple", "file1.json"), path.Join(examplePathDir, "file2.json")}
+	args := []string{"", path.Join(examplePathDir, "simple", "file1.json"), path.Join(examplePathDir, "simple", "file2.json")}
 	err := cliApp.Run(context.Background(), args)
 	if err != nil {
 		t.Fatal(err)

@@ -1,4 +1,4 @@
-package plainformatter
+package plain
 
 import (
 	"code/internal/domain/diff"

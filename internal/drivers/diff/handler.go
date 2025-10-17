@@ -1,11 +1,13 @@
 package diff
 
 import (
-	"code/internal/drivers/jsonparser"
-	"code/internal/drivers/plainformatter"
-	"code/internal/drivers/stylishformatter"
-	"code/internal/drivers/yamlparser"
+	jsonformatter "code/internal/drivers/formmaters/json"
+	"code/internal/drivers/formmaters/plain"
+	"code/internal/drivers/formmaters/stylish"
+	"code/internal/drivers/parsers/jsonparser"
+	"code/internal/drivers/parsers/yamlparser"
 	"code/internal/interfaces"
+
 	"context"
 	"errors"
 	"fmt"
@@ -60,9 +62,11 @@ func Handler(_ context.Context, command *cli.Command) error {
 	var formatter interfaces.Formatter
 	switch format {
 	case "stylish":
-		formatter = stylishformatter.Formatter{}
+		formatter = stylish.Formatter{}
 	case "plain":
-		formatter = plainformatter.Formatter{}
+		formatter = plain.Formatter{}
+	case "json":
+		formatter = jsonformatter.Formatter{}
 	default:
 		return fmt.Errorf("unsupported format: %s", format)
 	}
