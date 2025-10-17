@@ -1,13 +1,15 @@
 package diff
 
 import (
+	"code/internal/drivers/jsonparser"
+	"code/internal/drivers/yamlparser"
+	"code/internal/interfaces"
 	"context"
 	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 
-	"code/internal/drivers/jsonparser"
 	"code/internal/drivers/stylishformatter"
 	usecase "code/internal/usecase/diff"
 
@@ -37,9 +39,14 @@ func Handler(_ context.Context, command *cli.Command) error {
 		return fmt.Errorf("files must have the same supported extension: got %s and %s", ext1, ext2)
 	}
 
-	var parser jsonparser.Parser
+	var parser interfaces.Parser
 	switch ext1 {
 	case ".json":
+		parser = jsonparser.Parser{}
+	case ".yml":
+		fallthrough
+	case ".yaml":
+		parser = yamlparser.Parser{}
 	default:
 		return fmt.Errorf("unsupported extension: %s", ext1)
 	}

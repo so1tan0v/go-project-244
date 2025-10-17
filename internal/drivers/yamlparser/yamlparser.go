@@ -1,7 +1,7 @@
-package jsonparser
+package yamlparser
 
 import (
-	"encoding/json"
+	"gopkg.in/yaml.v3"
 )
 
 type Parser struct{}
@@ -9,7 +9,7 @@ type Parser struct{}
 func (p Parser) Parse(data []byte) (map[string]any, error) {
 	var m map[string]any
 
-	if err := json.Unmarshal(data, &m); err != nil {
+	if err := yaml.Unmarshal(data, &m); err != nil {
 		return map[string]any{}, err
 	}
 

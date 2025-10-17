@@ -1,4 +1,4 @@
-package jsonparser
+package yamlparser
 
 import (
 	"testing"
@@ -9,8 +9,8 @@ import (
 func TestParser_Parse_Success(t *testing.T) {
 	p := Parser{}
 
-	jsonString := `{"name": "test"}`
-	jsonBytes := []byte(jsonString)
+	yamlString := `name: test`
+	jsonBytes := []byte(yamlString)
 
 	result, err := p.Parse(jsonBytes)
 	assert.Nil(t, err)
@@ -20,8 +20,10 @@ func TestParser_Parse_Success(t *testing.T) {
 func TestParser_Parse_Error(t *testing.T) {
 	p := Parser{}
 
-	jsonString := `name": "test`
-	jsonBytes := []byte(jsonString)
+	yamlString := `
+name""""": "test
+`
+	jsonBytes := []byte(yamlString)
 
 	result, err := p.Parse(jsonBytes)
 	assert.NotNil(t, err)
