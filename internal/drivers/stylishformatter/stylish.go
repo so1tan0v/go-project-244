@@ -40,7 +40,7 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, depth 
 
 			f.writeNodes(sb, n.Children, depth+2)
 
-			_, err = fmt.Fprintf(sb, "\n"+indent+"  }")
+			_, err = fmt.Fprint(sb, "\n"+indent+"  }")
 			if err != nil {
 				return
 			}
@@ -72,7 +72,7 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, depth 
 		}
 
 		if i < len(sorted)-1 {
-			_, err := fmt.Fprintf(sb, "\n")
+			_, err := fmt.Fprint(sb, "\n")
 			if err != nil {
 				return
 			}
@@ -84,7 +84,7 @@ func (f Formatter) stringify(v any, depth int) string {
 	switch m := v.(type) {
 	case map[string]any:
 		var sb strings.Builder
-		_, err := fmt.Fprintf(&sb, "{\n")
+		_, err := fmt.Fprint(&sb, "{\n")
 		if err != nil {
 			return ""
 		}
@@ -111,7 +111,8 @@ func (f Formatter) stringify(v any, depth int) string {
 				}
 			}
 		}
-		_, err = fmt.Fprintf(&sb, "\n"+strings.Repeat(" ", (depth+1)*2)+"}")
+
+		_, err = fmt.Fprint(&sb, "\n"+strings.Repeat(" ", (depth+1)*2)+"}")
 		if err != nil {
 			return ""
 		}
