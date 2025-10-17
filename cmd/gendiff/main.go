@@ -1,15 +1,15 @@
 package main
 
 import (
-	cli_app "code/internal/drivers/cli-app"
-	handler "code/internal/drivers/gendiff"
+	cliapp "code/internal/drivers/cli-app"
+	handler "code/internal/drivers/diff"
 	"context"
 	"fmt"
 	"os"
 )
 
 func main() {
-	cliApp := cli_app.NewCliApp()
+	cliApp := cliapp.NewCliApp()
 
 	cliApp.AddAction(handler.Handler)
 
