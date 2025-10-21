@@ -16,65 +16,75 @@ func TestStylishFormatter_Format(t *testing.T) {
 		expected string
 	}{
 		{
-			name:     "empty diff",
-			nodes:    []diff.DiffNode{},
-			expected: `[]`,
+			name:  "empty diff",
+			nodes: []diff.DiffNode{},
+			expected: `{
+  "diff": []
+}`,
 		},
 		{
 			name: "unchanged",
 			nodes: []diff.DiffNode{
 				{Key: "a", Type: diff.NodeUnchanged, OldValue: 42},
 			},
-			expected: `[
-  {
-    "key": "a",
-    "oldValue": 42,
-    "newValue": null,
-    "children": null
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "a",
+      "oldValue": 42,
+      "newValue": null,
+      "children": null
+    }
+  ]
+}`,
 		},
 		{
 			name: "added",
 			nodes: []diff.DiffNode{
 				{Key: "b", Type: diff.NodeAdded, NewValue: "new"},
 			},
-			expected: `[
-  {
-    "key": "b",
-    "oldValue": null,
-    "newValue": "new",
-    "children": null
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "b",
+      "oldValue": null,
+      "newValue": "new",
+      "children": null
+    }
+  ]
+}`,
 		},
 		{
 			name: "removed",
 			nodes: []diff.DiffNode{
 				{Key: "c", Type: diff.NodeRemoved, OldValue: true},
 			},
-			expected: `[
-  {
-    "key": "c",
-    "oldValue": true,
-    "newValue": null,
-    "children": null
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "c",
+      "oldValue": true,
+      "newValue": null,
+      "children": null
+    }
+  ]
+}`,
 		},
 		{
 			name: "updated",
 			nodes: []diff.DiffNode{
 				{Key: "d", Type: diff.NodeUpdated, OldValue: 1, NewValue: 2},
 			},
-			expected: `[
-  {
-    "key": "d",
-    "oldValue": 1,
-    "newValue": 2,
-    "children": null
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "d",
+      "oldValue": 1,
+      "newValue": 2,
+      "children": null
+    }
+  ]
+}`,
 		},
 		{
 			name: "nested object",
@@ -87,21 +97,23 @@ func TestStylishFormatter_Format(t *testing.T) {
 					},
 				},
 			},
-			expected: `[
-  {
-    "key": "parent",
-    "oldValue": null,
-    "newValue": null,
-    "children": [
-      {
-        "key": "child",
-        "oldValue": null,
-        "newValue": "value",
-        "children": null
-      }
-    ]
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "parent",
+      "oldValue": null,
+      "newValue": null,
+      "children": [
+        {
+          "key": "child",
+          "oldValue": null,
+          "newValue": "value",
+          "children": null
+        }
+      ]
+    }
+  ]
+}`,
 		},
 		{
 			name: "mixed types with sorting",
@@ -110,26 +122,28 @@ func TestStylishFormatter_Format(t *testing.T) {
 				{Key: "a_added", Type: diff.NodeAdded, NewValue: "a"},
 				{Key: "m_unchanged", Type: diff.NodeUnchanged, OldValue: nil},
 			},
-			expected: `[
-  {
-    "key": "z_removed",
-    "oldValue": "z",
-    "newValue": null,
-    "children": null
-  },
-  {
-    "key": "a_added",
-    "oldValue": null,
-    "newValue": "a",
-    "children": null
-  },
-  {
-    "key": "m_unchanged",
-    "oldValue": null,
-    "newValue": null,
-    "children": null
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "z_removed",
+      "oldValue": "z",
+      "newValue": null,
+      "children": null
+    },
+    {
+      "key": "a_added",
+      "oldValue": null,
+      "newValue": "a",
+      "children": null
+    },
+    {
+      "key": "m_unchanged",
+      "oldValue": null,
+      "newValue": null,
+      "children": null
+    }
+  ]
+}`,
 		},
 		{
 			name: "nested object with map value",
@@ -140,17 +154,19 @@ func TestStylishFormatter_Format(t *testing.T) {
 					NewValue: map[string]any{"port": 8080, "ssl": true},
 				},
 			},
-			expected: `[
-  {
-    "key": "config",
-    "oldValue": null,
-    "newValue": {
-      "port": 8080,
-      "ssl": true
-    },
-    "children": null
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "config",
+      "oldValue": null,
+      "newValue": {
+        "port": 8080,
+        "ssl": true
+      },
+      "children": null
+    }
+  ]
+}`,
 		},
 		{
 			name: "updated nested object",
@@ -162,20 +178,22 @@ func TestStylishFormatter_Format(t *testing.T) {
 					NewValue: map[string]any{"host": "127.0.0.1", "port": 5433},
 				},
 			},
-			expected: `[
-  {
-    "key": "db",
-    "oldValue": {
-      "host": "localhost",
-      "port": 5432
-    },
-    "newValue": {
-      "host": "127.0.0.1",
-      "port": 5433
-    },
-    "children": null
-  }
-]`,
+			expected: `{
+  "diff": [
+    {
+      "key": "db",
+      "oldValue": {
+        "host": "localhost",
+        "port": 5432
+      },
+      "newValue": {
+        "host": "127.0.0.1",
+        "port": 5433
+      },
+      "children": null
+    }
+  ]
+}`,
 		},
 	}
 

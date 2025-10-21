@@ -32,8 +32,8 @@ func TestService_GenerateDiff_Success(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, `{
-  - test: "value"
-  + test: "value2"
+  - test: value
+  + test: value2
 }`, result)
 }
 

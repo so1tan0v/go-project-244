@@ -37,7 +37,7 @@ func TestStylishFormatter_Format(t *testing.T) {
 				{Key: "b", Type: diff.NodeAdded, NewValue: "new"},
 			},
 			expected: `{
-  + b: "new"
+  + b: new
 }`,
 		},
 		{
@@ -72,7 +72,7 @@ func TestStylishFormatter_Format(t *testing.T) {
 			},
 			expected: `{
     parent: {
-      + child: "value"
+      + child: value
     }
 }`,
 		},
@@ -84,9 +84,9 @@ func TestStylishFormatter_Format(t *testing.T) {
 				{Key: "m_unchanged", Type: diff.NodeUnchanged, OldValue: nil},
 			},
 			expected: `{
-  + a_added: "a"
+  + a_added: a
     m_unchanged: null
-  - z_removed: "z"
+  - z_removed: z
 }`,
 		},
 		{
@@ -100,8 +100,8 @@ func TestStylishFormatter_Format(t *testing.T) {
 			},
 			expected: `{
   + config: {
-      port: 8080
-      ssl: true
+        port: 8080
+        ssl: true
     }
 }`,
 		},
@@ -117,12 +117,12 @@ func TestStylishFormatter_Format(t *testing.T) {
 			},
 			expected: `{
   - db: {
-      host: "localhost"
-      port: 5432
+        host: localhost
+        port: 5432
     }
   + db: {
-      host: "127.0.0.1"
-      port: 5433
+        host: 127.0.0.1
+        port: 5433
     }
 }`,
 		},

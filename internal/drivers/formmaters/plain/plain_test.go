@@ -32,21 +32,21 @@ func TestStylishFormatter_Format(t *testing.T) {
 			nodes: []diff.DiffNode{
 				{Key: "b", Type: diff.NodeAdded, NewValue: "new"},
 			},
-			expected: `Property "b" was added with value: "new"`,
+			expected: `Property 'b' was added with value: 'new'`,
 		},
 		{
 			name: "removed",
 			nodes: []diff.DiffNode{
 				{Key: "c", Type: diff.NodeRemoved, OldValue: true},
 			},
-			expected: `Property "c" was removed`,
+			expected: `Property 'c' was removed`,
 		},
 		{
 			name: "updated",
 			nodes: []diff.DiffNode{
 				{Key: "d", Type: diff.NodeUpdated, OldValue: 1, NewValue: 2},
 			},
-			expected: `Property "d" was updated. From 1 to 2`,
+			expected: `Property 'd' was updated. From 1 to 2`,
 		},
 		{
 			name: "nested object",
@@ -59,7 +59,7 @@ func TestStylishFormatter_Format(t *testing.T) {
 					},
 				},
 			},
-			expected: `Property "parent.child" was added with value: "value"`,
+			expected: `Property 'parent.child' was added with value: 'value'`,
 		},
 		{
 			name: "mixed types with sorting",
@@ -68,8 +68,8 @@ func TestStylishFormatter_Format(t *testing.T) {
 				{Key: "a_added", Type: diff.NodeAdded, NewValue: "a"},
 				{Key: "m_unchanged", Type: diff.NodeUnchanged, OldValue: nil},
 			},
-			expected: `Property "a_added" was added with value: "a"
-Property "z_removed" was removed`,
+			expected: `Property 'a_added' was added with value: 'a'
+Property 'z_removed' was removed`,
 		},
 		{
 			name: "nested object with map value",
@@ -80,7 +80,7 @@ Property "z_removed" was removed`,
 					NewValue: map[string]any{"port": 8080, "ssl": true},
 				},
 			},
-			expected: `Property "config" was added with value: [complex value]`,
+			expected: `Property 'config' was added with value: [complex value]`,
 		},
 		{
 			name: "updated nested object",
@@ -92,7 +92,7 @@ Property "z_removed" was removed`,
 					NewValue: map[string]any{"host": "127.0.0.1", "port": 5433},
 				},
 			},
-			expected: `Property "db" was updated. From [complex value] to [complex value]`,
+			expected: `Property 'db' was updated. From [complex value] to [complex value]`,
 		},
 	}
 
