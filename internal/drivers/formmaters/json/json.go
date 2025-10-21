@@ -25,7 +25,11 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode) {
 
 	sort.SliceStable(sorted, func(i, j int) bool { return sorted[i].Key < sorted[j].Key })
 
-	prettyJSON, err := json.MarshalIndent(nodes, "", "  ")
+	wrap := map[string]any{
+		"diff": nodes,
+	}
+
+	prettyJSON, err := json.MarshalIndent(wrap, "", "  ")
 	if err != nil {
 		fmt.Println("Error marshaling JSON:", err)
 		return

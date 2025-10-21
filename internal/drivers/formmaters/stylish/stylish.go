@@ -105,7 +105,7 @@ func (f Formatter) stringify(v any, depth int) string {
 		sort.Strings(keys)
 		for i, k := range keys {
 			val := m[k]
-			indent := strings.Repeat(" ", (depth+2)*2)
+			indent := strings.Repeat(" ", (depth+3)*2)
 
 			_, err := fmt.Fprintf(&sb, "%s%s: %s", indent, k, f.stringify(val, depth+2))
 			if err != nil {
@@ -127,7 +127,7 @@ func (f Formatter) stringify(v any, depth int) string {
 
 		return sb.String()
 	case string:
-		return fmt.Sprintf("\"%s\"", m)
+		return m
 	case nil:
 		return "null"
 	default:
