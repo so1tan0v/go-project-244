@@ -32,7 +32,7 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key st
 		addInterval := false
 		switch n.Type {
 		case diff.NodeNested:
-			f.writeNodes(sb, n.Children, n.Key+".")
+			f.writeNodes(sb, n.Children, getKey(n.Key)+".")
 			addInterval = true
 		case diff.NodeUnchanged:
 		case diff.NodeRemoved:
