@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParser_Parse_Success(t *testing.T) {
+func TestParserParseSuccess(t *testing.T) {
 	p := Parser{}
 
 	jsonString := `{"name": "test"}`
@@ -17,7 +17,7 @@ func TestParser_Parse_Success(t *testing.T) {
 	assert.Equal(t, "test", result["name"])
 }
 
-func TestParser_Parse_Error(t *testing.T) {
+func TestParserParseError(t *testing.T) {
 	p := Parser{}
 
 	jsonString := `name": "test`

@@ -19,7 +19,7 @@ func TestNewService(t *testing.T) {
 	assert.Equal(t, sn.parser, ss.parser)
 }
 
-func TestService_GenerateDiff_Success(t *testing.T) {
+func TestServiceGenerateDiffSuccess(t *testing.T) {
 	formatter := stylish.Formatter{}
 	parser := jsonparser.Parser{}
 
@@ -37,7 +37,7 @@ func TestService_GenerateDiff_Success(t *testing.T) {
 }`, result)
 }
 
-func TestService_GenerateDiff_ParseError1(t *testing.T) {
+func TestServiceGenerateDiffParseError1(t *testing.T) {
 	formatter := stylish.Formatter{}
 	parser := jsonparser.Parser{}
 
@@ -53,7 +53,7 @@ func TestService_GenerateDiff_ParseError1(t *testing.T) {
 	assert.Equal(t, "invalid character 'e' in literal true (expecting 'r')", err.Error())
 }
 
-func TestService_GenerateDiff_ParseError2(t *testing.T) {
+func TestServiceGenerateDiffParseError2(t *testing.T) {
 	formatter := stylish.Formatter{}
 	parser := jsonparser.Parser{}
 

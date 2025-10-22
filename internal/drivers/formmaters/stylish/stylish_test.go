@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestStylishFormatter_Format(t *testing.T) {
+func TestStylishFormatterFormat(t *testing.T) {
 	tests := []struct {
 		name     string
 		nodes    []diff.DiffNode

@@ -32,7 +32,7 @@ func getExamplePath() string {
 	return path.Join("..", "..", "..", "examples")
 }
 
-func TestHandler_Success(t *testing.T) {
+func TestHandlerSuccess(t *testing.T) {
 	cliApp := initCliApp()
 
 	examplePathDir := getExamplePath()
@@ -43,7 +43,7 @@ func TestHandler_Success(t *testing.T) {
 	}
 }
 
-func TestHandler_MissingArgs(t *testing.T) {
+func TestHandlerMissingArgs(t *testing.T) {
 	cliApp := initCliApp()
 
 	args := []string{""}
@@ -57,7 +57,7 @@ func TestHandler_MissingArgs(t *testing.T) {
 	t.Fatal("should be error")
 }
 
-func TestHandler_UnsupportedTypes(t *testing.T) {
+func TestHandlerUnsupportedTypes(t *testing.T) {
 	cliApp := initCliApp()
 
 	examplePathDir := getExamplePath()
@@ -72,7 +72,7 @@ func TestHandler_UnsupportedTypes(t *testing.T) {
 	t.Fatal("should be error")
 }
 
-func TestHandler_NotFound(t *testing.T) {
+func TestHandlerNotFound(t *testing.T) {
 	cliApp := initCliApp()
 
 	examplePathDir := getExamplePath()

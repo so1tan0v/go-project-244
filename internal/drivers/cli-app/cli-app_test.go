@@ -9,7 +9,7 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func TestCliApp_Init(t *testing.T) {
+func TestCliAppInit(t *testing.T) {
 	app := NewCliApp()
 
 	called := false
@@ -36,7 +36,7 @@ func TestCliApp_Init(t *testing.T) {
 	assert.Equal(t, called, false)
 }
 
-func TestCliApp_GenerateFlags(t *testing.T) {
+func TestCliAppGenerateFlags(t *testing.T) {
 	app := NewCliApp()
 	err := app.GenerateFlags()
 	require.NoError(t, err)
@@ -47,7 +47,7 @@ func TestCliApp_GenerateFlags(t *testing.T) {
 	assert.Equal(t, "format", flag.Name)
 }
 
-func TestCliApp_AddAction(t *testing.T) {
+func TestCliAppAddAction(t *testing.T) {
 	app := NewCliApp()
 	var receivedCtx context.Context
 	var receivedCmd *cli.Command
@@ -70,7 +70,7 @@ func TestCliApp_AddAction(t *testing.T) {
 	assert.Equal(t, dummyCmd, receivedCmd)
 }
 
-func TestCliApp_Run_Success(t *testing.T) {
+func TestCliAppRunSuccess(t *testing.T) {
 	app := NewCliApp()
 
 	formatValue := ""
@@ -94,7 +94,7 @@ func TestCliApp_Run_Success(t *testing.T) {
 	assert.Equal(t, "plain", formatValue)
 }
 
-func TestCliApp_Run_WithAlias(t *testing.T) {
+func TestCliAppRunWithAlias(t *testing.T) {
 	app := NewCliApp()
 
 	formatValue := ""
