@@ -19,18 +19,13 @@ func (f Formatter) Format(nodes []diff.DiffNode) (string, error) {
 
 func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key string) {
 	sorted := make([]diff.DiffNode, len(nodes))
-
 	copy(sorted, nodes)
 
 	sort.SliceStable(sorted, func(i, j int) bool { return sorted[i].Key < sorted[j].Key })
 
-	getKey := func(i string) string {
-		return key + i
-	}
-
 	for i, n := range sorted {
 		beforeLen := sb.Len()
-		keyValue := getKey(n.Key)
+		keyValue := getKey(key, n.Key)
 
 		switch n.Type {
 		case diff.NodeNested:
@@ -54,14 +49,17 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key st
 			}
 		}
 
-		wroteSomething := sb.Len() > beforeLen
-		if wroteSomething && i != len(sorted)-1 {
+		if sb.Len() > beforeLen && i != len(sorted)-1 {
 			_, err := fmt.Fprintf(sb, "\n")
 			if err != nil {
 				return
 			}
 		}
 	}
+}
+
+func getKey(key, i string) string {
+	return key + i
 }
 
 func (f Formatter) stringify(v any) string {
