@@ -14,8 +14,7 @@ func (f Formatter) Format(nodes []diff.DiffNode) (string, error) {
 
 	f.writeNodes(&sb, nodes, "")
 
-	// Always return a single trailing newline for compatibility with tests
-	return strings.TrimRight(sb.String(), "\n") + "\n", nil
+	return strings.TrimRight(sb.String(), "\n"), nil
 }
 
 func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key string) {
@@ -56,7 +55,7 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key st
 		}
 
 		wroteSomething := sb.Len() > beforeLen
-		if wroteSomething && i < len(sorted)-1 {
+		if wroteSomething && i != len(sorted)-1 {
 			_, err := fmt.Fprintf(sb, "\n")
 			if err != nil {
 				return
