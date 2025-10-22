@@ -3,6 +3,7 @@ package code
 import (
 	"encoding/json"
 	"os"
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -10,15 +11,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func getExamplePath() string {
+	return path.Join("examples")
+}
+
 func projectPath(parts ...string) string {
-	// absolute path per workspace root
-	base := "/Users/user/projects/Backend/Go/go-project-244"
+	base := getExamplePath()
+
 	return filepath.Join(append([]string{base}, parts...)...)
 }
 
 func TestGenDiffJSONStylish(t *testing.T) {
-	file1 := projectPath("examples", "simple", "file1.json")
-	file2 := projectPath("examples", "simple", "file2.json")
+	file1 := projectPath("simple", "file1.json")
+	file2 := projectPath("simple", "file2.json")
 
 	out, err := GenDiff(file1, file2, "stylish")
 	require.NoError(t, err)
@@ -34,8 +39,8 @@ func TestGenDiffJSONStylish(t *testing.T) {
 }
 
 func TestGenDiffYAMLDefaultFormatStylish(t *testing.T) {
-	file1 := projectPath("examples", "simple", "file1.yml")
-	file2 := projectPath("examples", "simple", "file2.yml")
+	file1 := projectPath("simple", "file1.yml")
+	file2 := projectPath("simple", "file2.yml")
 
 	out, err := GenDiff(file1, file2, "")
 	require.NoError(t, err)
@@ -51,8 +56,8 @@ func TestGenDiffYAMLDefaultFormatStylish(t *testing.T) {
 }
 
 func TestGenDiffPlainFormat(t *testing.T) {
-	file1 := projectPath("examples", "simple", "file1.json")
-	file2 := projectPath("examples", "simple", "file2.json")
+	file1 := projectPath("simple", "file1.json")
+	file2 := projectPath("simple", "file2.json")
 
 	out, err := GenDiff(file1, file2, "plain")
 	require.NoError(t, err)
@@ -64,8 +69,8 @@ func TestGenDiffPlainFormat(t *testing.T) {
 }
 
 func TestGenDiffJSONFormatJSON(t *testing.T) {
-	file1 := projectPath("examples", "simple", "file1.json")
-	file2 := projectPath("examples", "simple", "file2.json")
+	file1 := projectPath("simple", "file1.json")
+	file2 := projectPath("simple", "file2.json")
 
 	out, err := GenDiff(file1, file2, "json")
 	require.NoError(t, err)
@@ -85,8 +90,8 @@ func TestGenDiffErrorMissingPaths(t *testing.T) {
 }
 
 func TestGenDiffErrorReadFile(t *testing.T) {
-	file1 := projectPath("examples", "simple", "no_such.json")
-	file2 := projectPath("examples", "simple", "file2.json")
+	file1 := projectPath("simple", "no_such.json")
+	file2 := projectPath("simple", "file2.json")
 
 	out, err := GenDiff(file1, file2, "stylish")
 	assert.Equal(t, "", out)
@@ -94,8 +99,8 @@ func TestGenDiffErrorReadFile(t *testing.T) {
 }
 
 func TestGenDiffErrorReadRightFile(t *testing.T) {
-	file1 := projectPath("examples", "simple", "file1.json")
-	file2 := projectPath("examples", "simple", "no_such.json")
+	file1 := projectPath("simple", "file1.json")
+	file2 := projectPath("simple", "no_such.json")
 
 	out, err := GenDiff(file1, file2, "stylish")
 	assert.Equal(t, "", out)
@@ -103,8 +108,8 @@ func TestGenDiffErrorReadRightFile(t *testing.T) {
 }
 
 func TestGenDiffErrorExtMismatch(t *testing.T) {
-	file1 := projectPath("examples", "simple", "file1.json")
-	file2 := projectPath("examples", "simple", "file2.yml")
+	file1 := projectPath("simple", "file1.json")
+	file2 := projectPath("simple", "file2.yml")
 
 	out, err := GenDiff(file1, file2, "stylish")
 	assert.Equal(t, "", out)
@@ -126,8 +131,8 @@ func TestGenDiffErrorUnsupportedExt(t *testing.T) {
 }
 
 func TestGenDiffErrorUnsupportedFormat(t *testing.T) {
-	file1 := projectPath("examples", "simple", "file1.json")
-	file2 := projectPath("examples", "simple", "file2.json")
+	file1 := projectPath("simple", "file1.json")
+	file2 := projectPath("simple", "file2.json")
 
 	out, err := GenDiff(file1, file2, "xml")
 	assert.Equal(t, "", out)
