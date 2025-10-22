@@ -27,27 +27,7 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key st
 		beforeLen := sb.Len()
 		keyValue := getKey(key, n.Key)
 
-		switch n.Type {
-		case diff.NodeNested:
-			f.writeNodes(sb, n.Children, keyValue+".")
-		case diff.NodeUnchanged:
-			continue
-		case diff.NodeRemoved:
-			_, err := fmt.Fprintf(sb, "Property '%s' was removed", keyValue)
-			if err != nil {
-				return
-			}
-		case diff.NodeAdded:
-			_, err := fmt.Fprintf(sb, "Property '%s' was added with value: %s", keyValue, f.stringify(n.NewValue))
-			if err != nil {
-				return
-			}
-		case diff.NodeUpdated:
-			_, err := fmt.Fprintf(sb, "Property '%s' was updated. From %s to %s", keyValue, f.stringify(n.OldValue), f.stringify(n.NewValue))
-			if err != nil {
-				return
-			}
-		}
+		f.parseKey(&n, sb, keyValue)
 
 		if sb.Len() > beforeLen && i != len(sorted)-1 {
 			_, err := fmt.Fprintf(sb, "\n")
@@ -58,8 +38,28 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key st
 	}
 }
 
-func getKey(key, i string) string {
-	return key + i
+func (f Formatter) parseKey(n *diff.DiffNode, sb *strings.Builder, keyValue string) {
+	switch n.Type {
+	case diff.NodeNested:
+		f.writeNodes(sb, n.Children, keyValue+".")
+	case diff.NodeUnchanged:
+		// continue
+	case diff.NodeRemoved:
+		_, err := fmt.Fprintf(sb, "Property '%s' was removed", keyValue)
+		if err != nil {
+			return
+		}
+	case diff.NodeAdded:
+		_, err := fmt.Fprintf(sb, "Property '%s' was added with value: %s", keyValue, f.stringify(n.NewValue))
+		if err != nil {
+			return
+		}
+	case diff.NodeUpdated:
+		_, err := fmt.Fprintf(sb, "Property '%s' was updated. From %s to %s", keyValue, f.stringify(n.OldValue), f.stringify(n.NewValue))
+		if err != nil {
+			return
+		}
+	}
 }
 
 func (f Formatter) stringify(v any) string {
@@ -73,4 +73,8 @@ func (f Formatter) stringify(v any) string {
 	default:
 		return fmt.Sprintf("%v", m)
 	}
+}
+
+func getKey(key, i string) string {
+	return key + i
 }

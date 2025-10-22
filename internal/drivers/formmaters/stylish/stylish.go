@@ -37,51 +37,55 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, depth 
 	sort.SliceStable(sorted, func(i, j int) bool { return sorted[i].Key < sorted[j].Key })
 
 	for i, n := range sorted {
-		switch n.Type {
-		case diff.NodeNested:
-			_, err := fmt.Fprintf(sb, "%s  %s: {\n", indent, n.Key)
-			if err != nil {
-				return
-			}
-
-			f.writeNodes(sb, n.Children, depth+2)
-
-			_, err = fmt.Fprint(sb, "\n"+indent+"  }")
-			if err != nil {
-				return
-			}
-		case diff.NodeUnchanged:
-			_, err := fmt.Fprintf(sb, "%s  %s: %s", indent, n.Key, f.stringify(n.OldValue, depth))
-			if err != nil {
-				return
-			}
-		case diff.NodeRemoved:
-			_, err := fmt.Fprintf(sb, "%s- %s: %s", indent, n.Key, f.stringify(n.OldValue, depth))
-			if err != nil {
-				return
-			}
-		case diff.NodeAdded:
-			_, err := fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth))
-			if err != nil {
-				return
-			}
-		case diff.NodeUpdated:
-			_, err := fmt.Fprintf(sb, "%s- %s: %s\n", indent, n.Key, f.stringify(n.OldValue, depth))
-			if err != nil {
-				return
-			}
-
-			_, err = fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth))
-			if err != nil {
-				return
-			}
-		}
+		f.parseValue(&n, sb, indent, depth)
 
 		if i < len(sorted)-1 {
 			_, err := fmt.Fprint(sb, "\n")
 			if err != nil {
 				return
 			}
+		}
+	}
+}
+
+func (f Formatter) parseValue(n *diff.DiffNode, sb *strings.Builder, indent string, depth int) {
+	switch n.Type {
+	case diff.NodeNested:
+		_, err := fmt.Fprintf(sb, "%s  %s: {\n", indent, n.Key)
+		if err != nil {
+			return
+		}
+
+		f.writeNodes(sb, n.Children, depth+2)
+
+		_, err = fmt.Fprint(sb, "\n"+indent+"  }")
+		if err != nil {
+			return
+		}
+	case diff.NodeUnchanged:
+		_, err := fmt.Fprintf(sb, "%s  %s: %s", indent, n.Key, f.stringify(n.OldValue, depth))
+		if err != nil {
+			return
+		}
+	case diff.NodeRemoved:
+		_, err := fmt.Fprintf(sb, "%s- %s: %s", indent, n.Key, f.stringify(n.OldValue, depth))
+		if err != nil {
+			return
+		}
+	case diff.NodeAdded:
+		_, err := fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth))
+		if err != nil {
+			return
+		}
+	case diff.NodeUpdated:
+		_, err := fmt.Fprintf(sb, "%s- %s: %s\n", indent, n.Key, f.stringify(n.OldValue, depth))
+		if err != nil {
+			return
+		}
+
+		_, err = fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth))
+		if err != nil {
+			return
 		}
 	}
 }
