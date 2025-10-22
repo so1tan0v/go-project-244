@@ -9,8 +9,6 @@ import (
 
 type Formatter struct{}
 
-func (f Formatter) Name() string { return "stylish" }
-
 func (f Formatter) Format(nodes []diff.DiffNode) (string, error) {
 	var sb strings.Builder
 
