@@ -64,7 +64,7 @@ func TestHandlerUnsupportedTypes(t *testing.T) {
 	args := []string{"", path.Join(examplePathDir, "some1.some1"), path.Join(examplePathDir, "some2.some2")}
 	err := cliApp.Run(context.Background(), args)
 	if err != nil {
-		assert.Equal(t, "files must have the same supported extension: got .some1 and .some2", err.Error())
+		assert.Equal(t, "unsupported extension: .some1", err.Error())
 
 		return
 	}
@@ -79,7 +79,7 @@ func TestHandlerNotFound(t *testing.T) {
 	args := []string{"", path.Join(examplePathDir, "some3.some3"), path.Join(examplePathDir, "some2.some2")}
 	err := cliApp.Run(context.Background(), args)
 	if err != nil {
-		assert.Equal(t, fmt.Sprintf("open %s: no such file or directory", path.Join(examplePathDir, "some3.some3")), err.Error())
+		assert.Equal(t, fmt.Sprintf("stat %s: no such file or directory", path.Join(examplePathDir, "some3.some3")), err.Error())
 
 		return
 	}

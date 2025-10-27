@@ -36,7 +36,13 @@ func GenDiff(file1, file2, format string) (string, error) {
 		return "", err
 	}
 
-	parser, err := pickParser(filepath.Ext(file1))
+	ext1 := filepath.Ext(file1)
+	ext2 := filepath.Ext(file2)
+	if ext1 == "" || ext1 != ext2 {
+		return "", fmt.Errorf("files must have the same supported extension: got %s and %s", ext1, ext2)
+	}
+
+	parser, err := pickParser(ext1)
 	if err != nil {
 		return "", err
 	}
