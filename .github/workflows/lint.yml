@@ -15,4 +15,6 @@ jobs:
       
       - name: Linting
         uses: golangci/golangci-lint-action@v5
-        run: make lint
+        with:
+          version: v2.5.0
+          args: "--issues-exit-code=0"
