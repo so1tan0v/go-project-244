@@ -29,20 +29,11 @@ func GenDiff(file1, file2, format string) (string, error) {
 		return "", err
 	}
 
-	if err := validateFileExtension(file1); err != nil {
-		return "", err
-	}
-	if err := validateFileExtension(file2); err != nil {
+	if err := validateFiles(file1, file2); err != nil {
 		return "", err
 	}
 
-	ext1 := filepath.Ext(file1)
-	ext2 := filepath.Ext(file2)
-	if ext1 == "" || ext1 != ext2 {
-		return "", fmt.Errorf("files must have the same supported extension: got %s and %s", ext1, ext2)
-	}
-
-	parser, err := pickParser(ext1)
+	parser, err := pickParser(filepath.Ext(file1))
 	if err != nil {
 		return "", err
 	}
@@ -92,6 +83,25 @@ func getFileContent(filePath string) ([]byte, error) {
 	fullpath := filepath.Clean(filePath)
 
 	return os.ReadFile(fullpath)
+}
+
+func validateFiles(filePath1 string, filePath2 string) error {
+	ext1 := filepath.Ext(filePath1)
+	ext2 := filepath.Ext(filePath2)
+
+	if err := validateFileExtension(filePath1); err != nil {
+		return err
+	}
+
+	if err := validateFileExtension(filePath2); err != nil {
+		return err
+	}
+
+	if ext1 == "" || ext1 != ext2 {
+		return fmt.Errorf("files must have the same supported extension: got %s and %s", ext1, ext2)
+	}
+
+	return nil
 }
 
 func validateFileExtension(filePath string) error {
