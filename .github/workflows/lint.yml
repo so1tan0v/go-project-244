@@ -15,5 +15,4 @@ jobs:
       
       - name: Linting
         uses: golangci/golangci-lint-action@v5
-        with:
-          version: v2.5.0
+        run: make lint
