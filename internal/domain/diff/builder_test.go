@@ -44,17 +44,7 @@ func TestBuildDiff(t *testing.T) {
 		case !leftOk && rightOk:
 			assert.Equal(t, d.Type, NodeAdded)
 		default:
-			if isObject(leftVal) && isObject(rightVal) {
-				assert.Equal(t, d.Type, NodeNested)
-				continue
-			}
-
-			if valuesEqual(leftVal, rightVal) {
-				assert.Equal(t, d.Type, NodeUnchanged)
-				continue
-			}
-
-			assert.Equal(t, d.Type, NodeUpdated)
+			testDefault(t, leftVal, rightVal, d.Type)
 		}
 	}
 }
@@ -87,25 +77,8 @@ func TestBuildDiffObjectInObject(t *testing.T) {
 		assert.Equal(t, d.Type, NodeNested)
 
 		for _, d1 := range d.Children {
-			leftKeyVal, leftKeyOk := left["key_object"]
-			rightKeyVal, rightKeyOk := right["key_object"]
-
-			if !leftKeyOk || !rightKeyOk {
-				t.Error("expected key_object")
-			}
-
-			// Приводим к map[string]any
-			leftMap, ok := leftKeyVal.(map[string]any)
-			if !ok {
-				t.Fatalf("left['key_object'] is not a map[string]any")
-			}
-			rightMap, ok := rightKeyVal.(map[string]any)
-			if !ok {
-				t.Fatalf("right['key_object'] is not a map[string]any")
-			}
-
-			leftVal, leftOk := leftMap[d1.Key]
-			rightVal, rightOk := rightMap[d1.Key]
+			leftVal, leftOk := getValueFromObjectInObject(t, left, "key_object", d1.Key)
+			rightVal, rightOk := getValueFromObjectInObject(t, right, "key_object", d1.Key)
 
 			switch {
 			case leftOk && !rightOk:
@@ -113,19 +86,44 @@ func TestBuildDiffObjectInObject(t *testing.T) {
 			case !leftOk && rightOk:
 				assert.Equal(t, d1.Type, NodeAdded)
 			default:
-				if isObject(leftVal) && isObject(rightVal) {
-					assert.Equal(t, d1.Type, NodeNested)
-					continue
-				}
-
-				if valuesEqual(leftVal, rightVal) {
-					assert.Equal(t, d1.Type, NodeUnchanged)
-					continue
-				}
-
-				assert.Equal(t, d1.Type, NodeUpdated)
+				testDefault(t, leftVal, rightVal, d1.Type)
 			}
 		}
-
 	}
+}
+
+func testDefault(t *testing.T, leftVal, rightVal any, typeNode NodeType) {
+	t.Helper()
+
+	if isObject(leftVal) && isObject(rightVal) {
+		assert.Equal(t, typeNode, NodeNested)
+
+		return
+	}
+
+	if valuesEqual(leftVal, rightVal) {
+		assert.Equal(t, typeNode, NodeUnchanged)
+
+		return
+	}
+
+	assert.Equal(t, typeNode, NodeUpdated)
+}
+
+func getValueFromObjectInObject(t *testing.T, obj map[string]any, key string, subKey string) (any, bool) {
+	t.Helper()
+
+	objKeyVal, objKeyOk := obj[key]
+	if !objKeyOk {
+		t.Error("expected key")
+	}
+
+	objMap, ok := objKeyVal.(map[string]any)
+	if !ok {
+		t.Fatalf("obj['%s'] is not a map[string]any", key)
+	}
+
+	objVal, objOk := objMap[subKey]
+
+	return objVal, objOk
 }

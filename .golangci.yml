@@ -1,0 +1,35 @@
+version: "2"
+run:
+  tests: true
+linters:
+  enable:
+    - cyclop
+    - gosec
+  settings:
+    cyclop:
+      max-complexity: 10
+    gosec: 
+      includes: 
+        - G304
+      severity: medium
+      confidence: medium
+      concurrency: 12
+
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

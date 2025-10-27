@@ -121,8 +121,9 @@ func TestGenDiffErrorUnsupportedExt(t *testing.T) {
 	dir := t.TempDir()
 	f1 := filepath.Join(dir, "a.txt")
 	f2 := filepath.Join(dir, "b.txt")
-	require.NoError(t, os.WriteFile(f1, []byte("k: v"), 0o644))
-	require.NoError(t, os.WriteFile(f2, []byte("k: v2"), 0o644))
+
+	require.NoError(t, os.WriteFile(f1, []byte("k: v"), 0o600))
+	require.NoError(t, os.WriteFile(f2, []byte("k: v2"), 0o600))
 
 	out, err := GenDiff(f1, f2, "stylish")
 	assert.Equal(t, "", out)

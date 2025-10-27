@@ -29,3 +29,6 @@ run-json-complex-example:
 
 lint:
 	 golangci-lint run
+
+security:
+	 gosec ./...

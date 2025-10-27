@@ -20,22 +20,23 @@ func GenDiff(file1, file2, format string) (string, error) {
 		return "", fmt.Errorf("you should pass file paths")
 	}
 
-	leftRaw, err := os.ReadFile(file1)
+	leftRaw, err := getFileContent(file1)
 	if err != nil {
 		return "", err
 	}
-	rightRaw, err := os.ReadFile(file2)
+	rightRaw, err := getFileContent(file2)
 	if err != nil {
 		return "", err
 	}
 
-	ext1 := filepath.Ext(file1)
-	ext2 := filepath.Ext(file2)
-	if ext1 == "" || ext1 != ext2 {
-		return "", fmt.Errorf("files must have the same supported extension: got %s and %s", ext1, ext2)
+	if err := validateFileExtension(file1); err != nil {
+		return "", err
+	}
+	if err := validateFileExtension(file2); err != nil {
+		return "", err
 	}
 
-	parser, err := pickParser(ext1)
+	parser, err := pickParser(filepath.Ext(file1))
 	if err != nil {
 		return "", err
 	}
@@ -75,4 +76,27 @@ func pickFormatter(format string) (interfaces.Formatter, error) {
 	default:
 		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
+}
+
+func getFileContent(filePath string) ([]byte, error) {
+	if _, err := os.Stat(filePath); err != nil {
+		return nil, err
+	}
+
+	fullpath := filepath.Clean(filePath)
+
+	return os.ReadFile(fullpath)
+}
+
+func validateFileExtension(filePath string) error {
+	ext := filepath.Ext(filePath)
+	if ext == "" {
+		return fmt.Errorf("file extension is required")
+	}
+
+	if ext != ".json" && ext != ".yml" && ext != ".yaml" {
+		return fmt.Errorf("unsupported extension: %s", ext)
+	}
+
+	return nil
 }
