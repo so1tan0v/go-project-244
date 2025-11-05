@@ -4,6 +4,7 @@ import (
 	cliapp "code/internal/drivers/cli-app"
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"testing"
@@ -19,10 +20,10 @@ func initCliApp() *cliapp.CliApp {
 	if err := cliApp.Init(); err != nil {
 		_, err2 := fmt.Fprintln(os.Stderr, err)
 		if err2 != nil {
-			return nil
+			log.Fatal(err2)
 		}
 
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	return cliApp
