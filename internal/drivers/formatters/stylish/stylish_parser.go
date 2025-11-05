@@ -6,42 +6,54 @@ import (
 	"strings"
 )
 
-func (f Formatter) parseNodeNested(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) {
+func (f Formatter) parseNodeNested(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) error {
 	if _, err := fmt.Fprintf(sb, "%s  %s: {\n", indent, n.Key); err != nil {
-		return
+		return err
 	}
 
-	f.writeNodes(sb, n.Children, depth+2)
+	if err := f.writeNodes(sb, n.Children, depth+2); err != nil {
+		return err
+	}
 
 	if _, err := fmt.Fprint(sb, "\n"+indent+"  }"); err != nil {
-		return
+		return err
 	}
+
+	return nil
 }
 
-func (f Formatter) parseNodeUnchanged(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) {
+func (f Formatter) parseNodeUnchanged(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) error {
 	if _, err := fmt.Fprintf(sb, "%s  %s: %s", indent, n.Key, f.stringify(n.OldValue, depth)); err != nil {
-		return
+		return err
 	}
+
+	return nil
 }
 
-func (f Formatter) parseNodeRemoved(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) {
+func (f Formatter) parseNodeRemoved(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) error {
 	if _, err := fmt.Fprintf(sb, "%s- %s: %s", indent, n.Key, f.stringify(n.OldValue, depth)); err != nil {
-		return
+		return err
 	}
+
+	return nil
 }
 
-func (f Formatter) parseNodeAdded(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) {
+func (f Formatter) parseNodeAdded(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) error {
 	if _, err := fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth)); err != nil {
-		return
+		return err
 	}
+
+	return nil
 }
 
-func (f Formatter) parseNodeUpdated(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) {
+func (f Formatter) parseNodeUpdated(sb *strings.Builder, n *diff.DiffNode, indent string, depth int) error {
 	if _, err := fmt.Fprintf(sb, "%s- %s: %s\n", indent, n.Key, f.stringify(n.OldValue, depth)); err != nil {
-		return
+		return err
 	}
 
 	if _, err := fmt.Fprintf(sb, "%s+ %s: %s", indent, n.Key, f.stringify(n.NewValue, depth)); err != nil {
-		return
+		return err
 	}
+
+	return nil
 }

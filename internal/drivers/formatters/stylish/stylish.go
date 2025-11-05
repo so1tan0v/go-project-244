@@ -12,22 +12,22 @@ type Formatter struct{}
 func (f Formatter) Format(nodes []diff.DiffNode) (string, error) {
 	var sb strings.Builder
 
-	_, err := fmt.Fprintf(&sb, "{\n")
-	if err != nil {
+	if _, err := fmt.Fprintf(&sb, "{\n"); err != nil {
 		return "", err
 	}
 
-	f.writeNodes(&sb, nodes, 1)
+	if err := f.writeNodes(&sb, nodes, 1); err != nil {
+		return "", err
+	}
 
-	_, err = fmt.Fprintf(&sb, "\n}")
-	if err != nil {
+	if _, err := fmt.Fprintf(&sb, "\n}"); err != nil {
 		return "", err
 	}
 
 	return sb.String(), nil
 }
 
-func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, depth int) {
+func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, depth int) error {
 	indent := strings.Repeat(" ", depth*2)
 
 	sorted := make([]diff.DiffNode, len(nodes))
@@ -37,30 +37,35 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, depth 
 	sort.SliceStable(sorted, func(i, j int) bool { return sorted[i].Key < sorted[j].Key })
 
 	for i, n := range sorted {
-		f.parseValue(&n, sb, indent, depth)
+		if err := f.parseValue(&n, sb, indent, depth); err != nil {
+			return err
+		}
 
 		if i < len(sorted)-1 {
-			_, err := fmt.Fprint(sb, "\n")
-			if err != nil {
-				return
+			if _, err := fmt.Fprint(sb, "\n"); err != nil {
+				return err
 			}
 		}
 	}
+
+	return nil
 }
 
-func (f Formatter) parseValue(n *diff.DiffNode, sb *strings.Builder, indent string, depth int) {
+func (f Formatter) parseValue(n *diff.DiffNode, sb *strings.Builder, indent string, depth int) error {
 	switch n.Type {
 	case diff.NodeNested:
-		f.parseNodeNested(sb, n, indent, depth)
+		return f.parseNodeNested(sb, n, indent, depth)
 	case diff.NodeUnchanged:
-		f.parseNodeUnchanged(sb, n, indent, depth)
+		return f.parseNodeUnchanged(sb, n, indent, depth)
 	case diff.NodeRemoved:
-		f.parseNodeRemoved(sb, n, indent, depth)
+		return f.parseNodeRemoved(sb, n, indent, depth)
 	case diff.NodeAdded:
-		f.parseNodeAdded(sb, n, indent, depth)
+		return f.parseNodeAdded(sb, n, indent, depth)
 	case diff.NodeUpdated:
-		f.parseNodeUpdated(sb, n, indent, depth)
+		return f.parseNodeUpdated(sb, n, indent, depth)
 	}
+
+	return nil
 }
 
 func (f Formatter) stringify(v any, depth int) string {

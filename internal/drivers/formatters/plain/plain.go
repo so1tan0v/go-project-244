@@ -12,12 +12,14 @@ type Formatter struct{}
 func (f Formatter) Format(nodes []diff.DiffNode) (string, error) {
 	var sb strings.Builder
 
-	f.writeNodes(&sb, nodes, "")
+	if err := f.writeNodes(&sb, nodes, ""); err != nil {
+		return "", err
+	}
 
 	return strings.TrimRight(sb.String(), "\n"), nil
 }
 
-func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key string) {
+func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key string) error {
 	sorted := make([]diff.DiffNode, len(nodes))
 	copy(sorted, nodes)
 
@@ -27,39 +29,44 @@ func (f Formatter) writeNodes(sb *strings.Builder, nodes []diff.DiffNode, key st
 		beforeLen := sb.Len()
 		keyValue := getKey(key, n.Key)
 
-		f.parseKey(&n, sb, keyValue)
+		if err := f.parseKey(&n, sb, keyValue); err != nil {
+			return err
+		}
 
 		if sb.Len() > beforeLen && i != len(sorted)-1 {
-			_, err := fmt.Fprintf(sb, "\n")
-			if err != nil {
-				return
+			if _, err := fmt.Fprintf(sb, "\n"); err != nil {
+				return err
 			}
 		}
 	}
+
+	return nil
 }
 
-func (f Formatter) parseKey(n *diff.DiffNode, sb *strings.Builder, keyValue string) {
+func (f Formatter) parseKey(n *diff.DiffNode, sb *strings.Builder, keyValue string) error {
 	switch n.Type {
 	case diff.NodeNested:
-		f.writeNodes(sb, n.Children, keyValue+".")
+		return f.writeNodes(sb, n.Children, keyValue+".")
 	case diff.NodeUnchanged:
 		// continue
 	case diff.NodeRemoved:
 		_, err := fmt.Fprintf(sb, "Property '%s' was removed", keyValue)
 		if err != nil {
-			return
+			return err
 		}
 	case diff.NodeAdded:
 		_, err := fmt.Fprintf(sb, "Property '%s' was added with value: %s", keyValue, f.stringify(n.NewValue))
 		if err != nil {
-			return
+			return err
 		}
 	case diff.NodeUpdated:
 		_, err := fmt.Fprintf(sb, "Property '%s' was updated. From %s to %s", keyValue, f.stringify(n.OldValue), f.stringify(n.NewValue))
 		if err != nil {
-			return
+			return err
 		}
 	}
+
+	return nil
 }
 
 func (f Formatter) stringify(v any) string {
