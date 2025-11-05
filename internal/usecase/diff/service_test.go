@@ -1,7 +1,7 @@
 package diff
 
 import (
-	"code/internal/drivers/formmaters/stylish"
+	"code/internal/drivers/formatters/stylish"
 	"code/internal/drivers/parsers/jsonparser"
 
 	"testing"

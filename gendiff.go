@@ -1,9 +1,9 @@
 package code
 
 import (
-	jsonformatter "code/internal/drivers/formmaters/json"
-	"code/internal/drivers/formmaters/plain"
-	"code/internal/drivers/formmaters/stylish"
+	jsonformatter "code/internal/drivers/formatters/json"
+	"code/internal/drivers/formatters/plain"
+	"code/internal/drivers/formatters/stylish"
 	"code/internal/drivers/parsers/jsonparser"
 	"code/internal/drivers/parsers/yamlparser"
 	"code/internal/interfaces"
